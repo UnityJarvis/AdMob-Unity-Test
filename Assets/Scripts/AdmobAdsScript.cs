@@ -2,50 +2,45 @@ using UnityEngine;
 using GoogleMobileAds.Api;
 using TMPro;
 using UnityEngine.UI;
+using System.IO;
 
 public class AdmobAdsScript : MonoBehaviour
 {
     public TextMeshProUGUI totalCoins;
-    public string appId = "ca-app-pub-7202081106518191~7133690532";
-
-    #region Real Ad IDs
-        #if UNITY_ANDROID
-            string bannerId = "ca-app-pub-7202081106518191/7163849819";
-            string interId = "ca-app-pub-7202081106518191/9805205467";
-            string rewardedId = "ca-app-pub-7202081106518191/5471494191";
-            string nativeId = "ca-app-pub-7202081106518191/2874881327";
-
-        #elif UNITY_IPHONE
-            string bannerId = "";
-            string interId = "";
-            string rewardedId = "";
-            string nativeId = "";
-
-        #endif
-    #endregion
-
-    #region Test AD IDs
-        #if UNITY_ANDROID
-            string T_bannerId = "ca-app-pub-3940256099942544/6300978111";
-            string T_interId = "ca-app-pub-3940256099942544/1033173712";
-            string T_rewardedId = "ca-app-pub-3940256099942544/5224354917";
-            string T_nativeId = "ca-app-pub-3940256099942544/2247696110";
-
-        #elif UNITY_IPHONE
-            string T_bannerId = "";
-            string T_interId = "";
-            string T_rewardedId = "";
-            string T_nativeId = "";
-        #endif
-    #endregion
-
     BannerView bannerView;
     InterstitialAd interstitialAd;
     RewardedAd rewardedAd;
     NativeAd nativeAd;
+    public Image img;
+
+    public TextAsset jsonFile;
+    [Space(20)]
+    [Header("Ad IDs")]
+    public string appId;
+    public string bnr,itr,rew,nat;
 
 
+    void GetJsonData()
+    {
+        JsonReader jsRead = JsonUtility.FromJson<JsonReader>(jsonFile.text);
+        bnr = jsRead.Android.bannerId;
+        itr = jsRead.Android.interId;
+        rew = jsRead.Android.rewardedId;
+        nat = jsRead.Android.nativeId;  
+
+        JsonIndividualData readData = JsonUtility.FromJson<JsonIndividualData>(jsonFile.text);  
+
+        appId = readData.appId;
+        
+    }
     void Start()
+    {
+        GetJsonData();
+
+        AdsInitializeInStart();
+    }
+
+    public void AdsInitializeInStart()
     {
         MobileAds.RaiseAdEventsOnUnityMainThread = true;
         MobileAds.Initialize(initStatus => {
@@ -77,7 +72,7 @@ public class AdmobAdsScript : MonoBehaviour
     {
         if(bannerView!=null)
         {DestroyBannerAd();}
-        bannerView = new BannerView(T_bannerId,AdSize.MediumRectangle,AdPosition.Top);
+        bannerView = new BannerView(bnr,AdSize.MediumRectangle,AdPosition.Top);
     }
     void ListenToBannerEvents() 
     {
@@ -145,7 +140,7 @@ public class AdmobAdsScript : MonoBehaviour
         var adRequest = new AdRequest();
         adRequest.Keywords.Add("unity-admob-sample");
 
-        InterstitialAd.Load(T_interId,adRequest,(InterstitialAd ad,LoadAdError error) => 
+        InterstitialAd.Load(itr,adRequest,(InterstitialAd ad,LoadAdError error) => 
         {
             if(error != null || ad == null)
             {
@@ -220,7 +215,7 @@ public class AdmobAdsScript : MonoBehaviour
         var adRequest = new AdRequest();
         adRequest.Keywords.Add("unity-admob-sample");
 
-        RewardedAd.Load(T_rewardedId,adRequest,(RewardedAd ad, LoadAdError error) => 
+        RewardedAd.Load(rew,adRequest,(RewardedAd ad, LoadAdError error) => 
         {
             if(error != null || ad == null)
             {
@@ -288,11 +283,11 @@ public class AdmobAdsScript : MonoBehaviour
 
 #region Native
 
-    public Image img;
+    
 
     public void RequestNativeAd()
     {
-        AdLoader adLoader = new AdLoader.Builder(T_nativeId).ForNativeAd().Build();
+        AdLoader adLoader = new AdLoader.Builder(nat).ForNativeAd().Build();
         adLoader.OnNativeAdLoaded += this.HandleNativeAdLoaded;
         adLoader.OnAdFailedToLoad += this.HandleNativeAdFailedToLoad;
 

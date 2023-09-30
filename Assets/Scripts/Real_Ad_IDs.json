@@ -1,0 +1,18 @@
+{
+    "appId" : "ca-app-pub-7202081106518191~7133690532",
+
+    "Android" :
+    {
+        "bannerId":"ca-app-pub-7202081106518191/7163849819",
+        "interId" : "ca-app-pub-7202081106518191/9805205467",
+        "rewardedId" : "ca-app-pub-7202081106518191/5471494191",
+        "nativeId" : "ca-app-pub-7202081106518191/2874881327"
+    },
+    "IOS" :
+    {
+        "bannerId":"",
+        "interId" : "",
+        "rewardedId" : "",
+        "nativeId" : ""
+    }
+}
