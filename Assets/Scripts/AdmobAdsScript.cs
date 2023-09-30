@@ -2,7 +2,6 @@ using UnityEngine;
 using GoogleMobileAds.Api;
 using TMPro;
 using UnityEngine.UI;
-using System.IO;
 
 public class AdmobAdsScript : MonoBehaviour
 {
@@ -72,7 +71,7 @@ public class AdmobAdsScript : MonoBehaviour
     {
         if(bannerView!=null)
         {DestroyBannerAd();}
-        bannerView = new BannerView(bnr,AdSize.MediumRectangle,AdPosition.Top);
+        bannerView = new BannerView(bnr,AdSize.Banner,AdPosition.Bottom);
     }
     void ListenToBannerEvents() 
     {
